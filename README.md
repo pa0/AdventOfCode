@@ -1,4 +1,4 @@
-# AdventOfCode22
+# Advent Of Code 2022
 
 Nice puzzle for scientists https://adventofcode.com
 
