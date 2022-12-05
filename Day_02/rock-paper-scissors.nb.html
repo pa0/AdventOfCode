@@ -1682,23 +1682,17 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before {
-content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "\e259";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "";
-border: none;
-}
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "";
+content: "\e258";
 font-family: 'Glyphicons Halflings';
-display: inline-block;
-padding: 10px;
-border-right: 1px solid #ddd;
+border: none;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -1761,18 +1755,33 @@ display: none;
 <p><a href="https://adventofcode.com" class="uri">https://adventofcode.com</a></p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGYgPC0gcmVhZC5kZWxpbShcIi4vRGF5XzAyL2lucHV0Mi50eHRcIiwgaGVhZGVyID0gRiwgc2VwID0gXCIgXCIpXG5gYGAifQ== -->
-<pre class="r"><code>df &lt;- read.delim(&quot;./Day_02/input2.txt&quot;, header = F, sep = &quot; &quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3N0cmF0ZWd5XG5BIDwtIFwicm9ja1wiICAgICAgICNYIDFcbkIgPC0gXCJwYXBlclwiICAgICAgI1kgMlxuQyA8LSBcInNjaXNzb3JzXCIgICAjWiAzXG5cbiMgcG9pbnRzXG5BLlggPC0gNCAgI3RpZSAgIDMgKyAxXG5BLlkgPC0gOCAgI3dpbiAgIDYgKyAyXG5BLlogPC0gMyAgI2xvc2UgIDAgKyAzXG5cbkIuWCA8LSAxICAjbG9zZSAgMCArIDFcbkIuWSA8LSA1ICAjdGllICAgMyArIDJcbkIuWiA8LSA5ICAjd2luICAgNiArIDNcblxuQy5YIDwtIDcgICN3aW4gICA2ICsgMVxuQy5ZIDwtIDIgICNsb3NlICAwICsgMlxuQy5aIDwtIDYgICN0aWUgICAzICsgM1xuYGBgIn0= -->
-<pre class="r"><code>#strategy
-A &lt;- &quot;rock&quot;       #X 1
-B &lt;- &quot;paper&quot;      #Y 2
-C &lt;- &quot;scissors&quot;   #Z 3
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZGYgPC0gcmVhZC5kZWxpbShcXC4vRGF5XzAyL2lucHV0Mi50eHRcXCwgaGVhZGVyID0gRiwgc2VwID0gXFwgXFwpXG5gYGBcbmBgYCJ9 -->
+<pre class="r"><code>```r
+df &lt;- read.delim(\./Day_02/input2.txt\, header = F, sep = \ \)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuI3N0cmF0ZWd5XG5BIDwtIFxccm9ja1xcICAgICAgICNYIDFcbkIgPC0gXFxwYXBlclxcICAgICAgI1kgMlxuQyA8LSBcXHNjaXNzb3JzXFwgICAjWiAzXG5cbiMgcG9pbnRzXG5BLlggPC0gNCAgI3RpZSAgIDMgKyAxXG5BLlkgPC0gOCAgI3dpbiAgIDYgKyAyXG5BLlogPC0gMyAgI2xvc2UgIDAgKyAzXG5cbkIuWCA8LSAxICAjbG9zZSAgMCArIDFcbkIuWSA8LSA1ICAjdGllICAgMyArIDJcbkIuWiA8LSA5ICAjd2luICAgNiArIDNcblxuQy5YIDwtIDcgICN3aW4gICA2ICsgMVxuQy5ZIDwtIDIgICNsb3NlICAwICsgMlxuQy5aIDwtIDYgICN0aWUgICAzICsgM1xuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+#strategy
+A &lt;- \rock\       #X 1
+B &lt;- \paper\      #Y 2
+C &lt;- \scissors\   #Z 3
 
 # points
 A.X &lt;- 4  #tie   3 + 1
@@ -1786,25 +1795,50 @@ B.Z &lt;- 9  #win   6 + 3
 C.X &lt;- 7  #win   6 + 1
 C.Y &lt;- 2  #lose  0 + 2
 C.Z &lt;- 6  #tie   3 + 3</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2NvcmVzXG5cbmBgYCJ9 --&gt;
+
+```r
+scores
+</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICBYIFkgWlxuQSA0IDggM1xuQiAxIDUgOVxuQyA3IDIgNlxuIn0= -->
+<pre><code>  X Y Z
+A 4 8 3
+B 1 5 9
+C 7 2 6</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBwdW5rdGFjamEgeiB3eWLDs3IgKyBwdW5rdHkgemEgc3RhbiBtZWN6dVxuc2NvcmVzIDwtIG1hdHJpeChyZXAoMTozLDMpLDMsMywgYnlyb3c9VCkgKyBtYXRyaXgoYygzLDYsMCwwLDMsNiw2LDAsMyksIDMsMywgYnlyb3cgPSBUKVxuY29sbmFtZXMoc2NvcmVzKSA8LSBjKFwiWFwiLFwiWVwiLFwiWlwiKVxucm93bmFtZXMoc2NvcmVzKSA8LSBjKFwiQVwiLFwiQlwiLFwiQ1wiKVxuYGBgIn0= -->
-<pre class="r"><code># punktacja z wybór + punkty za stan meczu
-scores &lt;- matrix(rep(1:3,3),3,3, byrow=T) + matrix(c(3,6,0,0,3,6,6,0,3), 3,3, byrow = T)
-colnames(scores) &lt;- c(&quot;X&quot;,&quot;Y&quot;,&quot;Z&quot;)
-rownames(scores) &lt;- c(&quot;A&quot;,&quot;B&quot;,&quot;C&quot;)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUoZGYpIHw+IGFzLm1hdHJpeCgpIFxuXG5gYGAifQ== -->
+<pre class="r"><code>table(df) |&gt; as.matrix() 
+</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUoZGYpIHw+IGFzLm1hdHJpeCgpICogc2NvcmVzIC0+IHNjb3Jlc190YWJsZVxuc2NvcmVzX3RhYmxlXG5gYGAifQ== -->
-<pre class="r"><code>table(df) |&gt; as.matrix() * scores -&gt; scores_table
-scores_table</code></pre>
-<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgVjJcblYxICAgIFggICBZICAgWlxuICBBIDM3NCAgNDMgIDY1XG4gIEIgMTkxIDc0NCAzNTBcbiAgQyAzNTAgMjc2IDEwN1xuIn0= -->
+<pre><code>   V2
+V1    X   Y   Z
+  A 374  43  65
+  B 191 744 350
+  C 350 276 107</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
@@ -1822,41 +1856,77 @@ scores_table</code></pre>
 matrix(c(3,6,0,0,3,6,6,0,3), 3,3, byrow = T)</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWF0cml4KHJlcChjKDAsMyw2KSwzKSwgMywzLCBieXJvdyA9IFQpXG5cbmBgYCJ9 -->
-<pre class="r"><code>matrix(rep(c(0,3,6),3), 3,3, byrow = T)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubWF0cml4KHJlcChjKDAsMyw2KSwzKSwgMywzLCBieXJvdyA9IFQpXG5cbmBgYFxuYGBgIn0= -->
+<pre class="r"><code>```r
+matrix(rep(c(0,3,6),3), 3,3, byrow = T)
 </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgICBbLDFdIFssMl0gWywzXVxuWzEsXSAgICAwICAgIDMgICAgNlxuWzIsXSAgICAwICAgIDMgICAgNlxuWzMsXSAgICAwICAgIDMgICAgNlxuIn0= -->
-<pre><code>     [,1] [,2] [,3]
-[1,]    0    3    6
-[2,]    0    3    6
-[3,]    0    3    6</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2NvcmVzX3RhYmxlXG5cbmBgYCJ9 -->
-<pre class="r"><code>scores_table
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiICAgICBbLDFdIFssMl0gWywzXVxuWzEsXSAgICAwICAgIDMgICAgNlxuWzIsXSAgICAwICAgIDMgICAgNlxuWzMsXSAgICAwICAgIDMgICAgNlxuIn0= --&gt;
 </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgVjJcblYxICAgICBYICAgIFkgICAgWlxuICBBIDExMjIgIDE3MiAgNTIwXG4gIEIgIDE5MSAzNzIwIDMxNTBcbiAgQyAgNzAwIDE2NTYgIDc0OVxuIn0= -->
-<pre><code>   V2
-V1     X    Y    Z
-  A 1122  172  520
-  B  191 3720 3150
-  C  700 1656  749</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXMudmVjdG9yKHNjb3Jlc190YWJsZSkgfD4gc3VtKClcblxuYGBgIn0= -->
-<pre class="r"><code>as.vector(scores_table) |&gt; sum()
+<pre><code> [,1] [,2] [,3]</code></pre>
+<p>[1,] 0 3 6 [2,] 0 3 6 [3,] 0 3 6</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuc2NvcmVzX3RhYmxlXG5cbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+scores_table
 </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDExOTgwXG4ifQ== -->
-<pre><code>[1] 11980</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiICAgVjJcblYxICAgICBYICAgIFkgICAgWlxuICBBIDExMjIgIDE3MiAgNTIwXG4gIEIgIDE5MSAzNzIwIDMxNTBcbiAgQyAgNzAwIDE2NTYgIDc0OVxuIn0= --&gt;
+</code></pre>
+<p>V2 V1 X Y Z A 1122 172 520 B 191 3720 3150 C 700 1656 749</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYXMudmVjdG9yKHNjb3Jlc190YWJsZSkgfD4gc3VtKClcblxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+as.vector(scores_table) |&gt; sum()
+</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiWzFdIDExOTgwXG4ifQ== --&gt;
+</code></pre>
+<p>[1] 11980 ```</p>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->

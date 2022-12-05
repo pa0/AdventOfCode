@@ -1,0 +1,73 @@
+---
+title: "AoC22 05"
+output: html_notebook
+---
+
+```{r}
+source("input_crates.R")
+moves <- readLines(con = "input_moves.txt", warn = F)
+head(moves)
+```
+
+```{r}
+# obróbka ruchów
+library(stringi)
+stri_split(moves, regex = "[a-z ]", omit_empty=T, simplify =T) |> 
+  as.data.frame() |>
+  apply(MARGIN = 2, FUN = as.numeric) -> moves
+
+colnames(moves) <- c("move", "from", "to")
+head(moves)
+```
+
+```{r}
+# ruch
+ruch <- function(m, which.mover = 9000){
+  c <- m["move"]
+  f <- m["from"]
+  t <- m["to"]
+  
+  stopifnot(c>0)
+  
+  #high of piles with correction
+  (which(is.na(crates[,f])) |> min()) -1 -> f.high
+  (which(is.na(crates[,t])) |> min()) -> t.high
+  
+  if(c >= f.high){  #if accidentally lack of piles
+    c <- f.high
+  }
+  
+  c <- c-1  #length correction
+  
+  if(which.mover == 9000){
+    crates[t.high:(t.high+c),t] <- crates[f.high:(f.high-c),f]   # CrateMover 9000
+  } else {
+    crates[t.high:(t.high+c),t] <- crates[(f.high-c):f.high,f]   # CrateMover 9001
+  }
+  crates[f.high:(f.high-c),f] <- NA
+  return(crates)
+}
+```
+
+```{r}
+for(i in 1:nrow(moves)){
+  crates <- ruch(moves[i,], 9000)
+}
+```
+
+```{r}
+wynik <- apply(crates, 2, function(x) which(is.na(x)) |> min() - 1)
+
+# dirty fast solution
+paste(crates[wynik[1],1]|>unlist(),
+      crates[wynik[2],2]|>unlist(),
+      crates[wynik[3],3]|>unlist(),
+      crates[wynik[4],4]|>unlist(),
+      crates[wynik[5],5]|>unlist(),
+      crates[wynik[6],6]|>unlist(),
+      crates[wynik[7],7]|>unlist(),
+      crates[wynik[8],8]|>unlist(),
+      crates[wynik[9],9]|>unlist(), collapse = "", sep=""
+      )
+```
+
