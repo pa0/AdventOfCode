@@ -1,0 +1,118 @@
+---
+title: "sila sygnalu"
+output: html_notebook
+---
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(ggplot2)
+rm(list=ls())
+```
+
+
+```{r}
+input <- readLines("cykle")
+
+X <- 1
+cycles <- 0
+
+
+for (i in input) {
+  if (i == "noop") {
+    cycles <- c(cycles, X)
+
+  } else {
+    cycles <- c(cycles, X)
+    cycles <- c(cycles, X)
+    val <- as.integer(substr(i, 6, nchar(i)))
+    X <- X + val
+  }
+}
+
+cycles <- cycles[-1]
+
+index <- c(20, 60, 100, 140, 180, 220)
+
+sum(cycles[index] * index)
+```
+
+
+```{r}
+# Podziel dane na listy
+data_move <- strsplit(input, " ")
+
+cycle <- 0
+pos <- 0
+crt <- ''
+crts <- c()
+
+checking <- function() {
+  if (pos <= cycle && cycle <= pos + 2) {
+    crt <<- paste0(crt, '#')
+  } else {
+    crt <<- paste0(crt, '.')
+  }
+
+  if (nchar(crt) == 40) {
+    crts <<- c(crts, crt)
+    crt <<- ''
+    pos <<- pos + 40
+  }
+}
+
+for (i in seq_along(data_move)) {
+  if (data_move[[i]][1] == 'addx') {
+    checking()
+    cycle <- cycle + 1
+
+    checking()
+    cycle <- cycle + 1
+
+    pos <<- pos + as.numeric(data_move[[i]][2])
+  } else if (data_move[[i]][1] == 'noop') {
+    checking()
+    cycle <- cycle + 1
+  }
+}
+
+# Wydrukuj wynik
+crts
+```
+
+
+
+```{r, fig.width=4, fig.height=.9}
+# Zamień wynik na ramkę znaków
+unlist(strsplit(crts, "")) |> 
+  matrix(ncol = 40, byrow = T) |> data.frame() |>
+  mutate(wiersz = (7 - row_number())) |>
+  pivot_longer(-wiersz, names_to = "kolumna", values_to = "result") |>
+  mutate(kolumna = str_remove(kolumna, "X") |> as.numeric()) |>
+  
+# malowanie ekranu
+  ggplot(aes(kolumna, wiersz)) +
+  geom_point(aes(shape = result, color = result), size = 4) +
+  scale_shape_manual(values = c(22, 15)) +
+  scale_color_manual(values = c("white", "darkgreen")) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+  ) +
+  labs(x = NULL, y = NULL)
+```
+
+
+
+```{r}
+library(gganimate)
+
+
+```
+
+
+

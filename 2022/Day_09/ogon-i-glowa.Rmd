@@ -1,0 +1,165 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+https://jrosell.github.io/AdventOfCode/2022/09.html
+
+```{r}
+readLines("./ogon-i-glowa", warn = F) |> 
+  stringr::str_split(" ", simplify = T) |> 
+  as.data.frame() |> 
+  tidyr::tibble() -> moves
+colnames(moves) <- c("mv", "step")
+moves$step <- as.numeric(moves$step)
+```
+
+```{r}
+test <- tribble(
+        ~mv, ~step,
+        "R", 4,
+        "U", 4,
+        "L", 3,
+        "D", 1,
+        "R", 4,
+        "D", 1,
+        "L", 5,
+        "R", 2
+    )
+test
+```
+
+```{r}
+sum(test$step)
+```
+
+
+
+```{r}
+# 
+kierunki <- list(
+  "R" = c(1, 0),
+  "L" = c(-1, 0),
+  "U" = c(0, -1),
+  "D" = c(0, 1)
+)
+
+```
+
+
+```{r}
+# HT start position
+wh <- wt <- kh <- kt <- 1000
+
+miejsca <- matrix(0,2000,2000)
+## zaisz miejsce ogona
+miejsca[wt, kt] <- 1
+i <- 1
+n <- 1
+
+zbior <- moves
+
+# wez pierwszy ruch
+for(i in 1:nrow(zbior)) {
+  # tyle ile krokow powtorz
+  for(n in 1:unlist(zbior[i, "step"])) {
+    ## zamapietaj miejsce glowy
+    th <- list(wh, kh)
+    ## rusz glową
+    wh <- wh + unlist(kierunki[unlist(zbior[i, "mv"])])[1]
+    kh <- kh + unlist(kierunki[unlist(zbior[i, "mv"])])[2]
+    ## oblicz odleglosc g-o
+    distance <- dist(rbind(c(wh,kh), c(wt,kt)))
+    #print(paste0("dist:",distance,"   z:",wh,",",kh, " do: ", wt, ",", kt))
+    ### jeśli g-o > 1 to rusz ogon w zapamietane miejsce glowy
+    if (distance > 1.5) {
+      wt <- unlist(th)[1]
+      kt <- unlist(th)[2]
+      #print(paste0("ogon ruch na:", unlist(th)[1], ",",unlist(th)[2]))
+      ### dodaj flage do tablicy odwiedzin
+      miejsca[wt, kt] <- 1
+    }
+  }
+  #print(paste0("----------po ruchu: [",wt,",",kt," --- ",wh,",",kh,"]"))
+}
+
+miejsca |> sum() 
+```
+
+
+
+
+
+```{r}
+library(tidyverse)
+
+data <- 
+    read_csv("ogon-i-glowa", 
+      col_names = c("line"),
+      show_col_types = FALSE
+    )
+
+moves <- list(
+  "R" = c(1, 0),
+  "L" = c(-1, 0),
+  "U" = c(0, -1),
+  "D" = c(0, 1)
+)
+
+find_status <- function(status, rope_size) {
+    for (knot in 2:rope_size) {
+      dx <- status[[knot - 1]][1] - status[[knot]][1];
+      dy <- status[[knot - 1]][2] - status[[knot]][2];
+      if (abs(dx) > 1) {
+          if (dx > 0) status[[knot]][1] <- status[[knot]][1] + 1
+          if (dx < 0) status[[knot]][1] <- status[[knot]][1] - 1
+          if (dy > 0) status[[knot]][2] <- status[[knot]][2] + 1
+          if (dy < 0) status[[knot]][2] <- status[[knot]][2] - 1
+      } else if (abs(dy) > 1) {
+          if (dy > 0) status[[knot]][2] <- status[[knot]][2] + 1
+          if (dy < 0) status[[knot]][2] <- status[[knot]][2] - 1
+          if (dx > 0) status[[knot]][1] <- status[[knot]][1] + 1
+          if (dx < 0) status[[knot]][1] <- status[[knot]][1] - 1
+      }
+    }
+    status
+}
+move_rope <- function(input, rope_size) {
+    data <- pull(input) %>% str_split(" ")
+    result <- list()
+    status <- list()
+    for (zzz in 1:rope_size) {
+        status <- append(status, list(c(0, 0)))
+    }
+    for (motion in seq_along(data)) {
+        direction <- data[[motion]][1]
+        steps <- as.integer(data[[motion]][2])
+        for (i in 1:steps) {
+            status[[1]] <- c(
+              status[[1]][1] + moves[[direction]][1],
+              status[[1]][2] + moves[[direction]][2]
+            )
+            status <- find_status(status, rope_size)
+            result <- append(result, status[rope_size])
+        }
+    }
+    result
+}
+
+move_rope(data, 2) %>% 
+  map_chr(~paste(.x, collapse=",")) %>% 
+  unique() %>% 
+  length()
+```
+
+```{r}
+move_rope(data, 10) %>% 
+  map_chr(~paste(.x, collapse=",")) %>% 
+  unique() %>% 
+  length()
+```
+

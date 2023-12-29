@@ -1,0 +1,75 @@
+---
+title: "Day 1"
+author: "PK"
+format: html
+---
+
+```{r}
+library(dplyr)
+readLines("input") -> dane
+dane |> str()
+```
+
+# Part One
+
+```{r}
+sapply(dane, function(x) {
+  l = gsub(pattern = "[a-z]", replacement = "", x)
+  a = stringi::stri_match_first(regex = "[0-9]", l)
+  b = stringi::stri_match_last(regex = "[0-9]", l)
+  paste0(a,b) |> as.numeric()
+}) |> sum()
+
+```
+
+# Part Two
+
+```{r}
+# zamiana na cyfry
+
+naCyfre <- function(slowo) {
+  
+  gsub(pattern = "one", replacement = "1", slowo) -> slowo
+  gsub(pattern = "two", replacement = "2", slowo) -> slowo
+  gsub(pattern = "three", replacement = "3", slowo) -> slowo
+  gsub(pattern = "four", replacement = "4", slowo) -> slowo
+  gsub(pattern = "five", replacement = "5", slowo) -> slowo
+  gsub(pattern = "six", replacement = "6", slowo) -> slowo
+  gsub(pattern = "seven", replacement = "7", slowo) -> slowo
+  gsub(pattern = "eight", replacement = "8", slowo) -> slowo
+  gsub(pattern = "nine", replacement = "9", slowo) -> slowo
+  
+  return(slowo)
+}
+
+# słownik zbitek, bo niektóre się posklejały
+liczby <- c("one","two","three","four","five","six","seven","eight","nine")
+expand.grid(liczby, liczby, stringsAsFactors = F) |> apply(MARGIN=1, function(x) paste0(x, collapse = "")) -> ciag_full
+
+gsub(pattern = "oo", replacement = "o", ciag_full) |> 
+gsub(pattern = "ee", replacement = "e") |> 
+gsub(pattern = "tt", replacement = "t") -> ciag_short
+
+cbind(ciag_short, ciag_full) -> slownik
+#skrócimy go!
+slownik[!(slownik[,1] == slownik[,2]),] -> slownik
+
+# rozwiniemy nazwy
+zamien_ciagi <- function(wektor, slownik) {
+  for (i in seq_along(slownik[, 1])) {
+    wektor <- gsub(slownik[i, 1], slownik[i, 2], wektor)
+  }
+  return(wektor)
+}
+
+# i juz można liczyć
+sapply(sapply(zamien_ciagi(dane, slownik), naCyfre), function(x) {
+  l = gsub(pattern = "[a-z]", replacement = "", x)
+  a = stringi::stri_match_first(regex = "[0-9]", l)
+  b = stringi::stri_match_last(regex = "[0-9]", l)
+  paste0(a,b) |> as.numeric()
+}) |> sum()
+```
+
+
+

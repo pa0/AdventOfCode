@@ -1,0 +1,79 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(stringi)
+```
+
+```{r}
+plecaki <- read.delim("input_rucsack", header=F)
+names(plecaki)[1] <- "plecak"
+plecaki |> class()
+plecaki[1,]
+```
+
+```{r}
+plecaki$wielkosc <- nchar(plecaki[,1])/2
+plecaki$left <- substr(plecaki$plecak, 1, plecaki$wielkosc)
+plecaki$right <- substr(plecaki$plecak, plecaki$wielkosc+1, plecaki$wielkosc*2)
+```
+
+```{r}
+a <- plecaki$left[2]
+b <- plecaki$right[2]
+w <- plecaki$wielkosc[2]
+
+tester <- function(a, b, w){
+  a <- stri_split_boundaries(a, type = "character", simplify = T)
+  b <- stri_split_boundaries(b, type = "character", simplify = T)
+  for(i in 1:w){
+    for(j in 1:w){
+      if(a[i] == b[j]) {
+        d <- match(a[i], LETTERS, nomatch = 0)
+        waga <- match(a[i], letters, nomatch = 0) + ifelse(d == 0, 0, 26+d) 
+      }
+    }
+  }
+  waga
+}
+tester(a,b,w)
+```
+
+```{r}
+apply(plecaki, 1, function(x) tester(x["left"], x["right"], x["wielkosc"])) |> sum()
+```
+
+```{r}
+# grupy 3 elfowe
+plecaki$grupa <-  rep(1:(nrow(plecaki)/3), each=3)
+
+badz <- function(g){
+  grupa <- plecaki[plecaki$grupa == g,]
+  waga <- -1
+  a <- stri_split_boundaries(grupa[1,"plecak"], type = "character", simplify = T)
+  b <- stri_split_boundaries(grupa[2,"plecak"], type = "character", simplify = T)
+  c <- stri_split_boundaries(grupa[3,"plecak"], type = "character", simplify = T)
+  
+  for(i in 1:length(a)){
+    for(j in 1:length(b)){
+      if(a[i] == b[j]) {
+        badz_ab <- a[i]
+        for(k in 1:length(c)){
+          if(badz_ab == c[k]){
+            #print(paste(badz_ab))
+            d <- match(c[k], LETTERS, nomatch = 0)
+            waga <- match(c[k], letters, nomatch = 0) + ifelse(d == 0, 0, 26+d)
+          }
+        }
+      }
+    }
+  }
+  waga
+}
+```
+
+```{r}
+sapply(1:100, badz) |> sum()
+```
+

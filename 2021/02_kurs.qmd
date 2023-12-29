@@ -1,0 +1,66 @@
+---
+title: "Kurs submarine"
+format: html
+---
+
+```{r}
+library(stringi)
+library(dplyr)
+library(tibble)
+
+```
+
+```{r}
+kurs <- readLines("2021_days/02_input_kurs.txt")
+length(kurs)
+
+kurs |> 
+  stri_split(regex = " ") |> 
+  unlist() |>
+  matrix(nrow = length(kurs), byrow=T) |> 
+  data.frame() |> 
+  tibble() -> dane 
+  
+colnames(dane) <- c("polecenie", "wartosc")
+
+dane$wartosc <- as.numeric(dane$wartosc)
+
+tapply(dane$wartosc, dane$polecenie, sum) -> wynik
+
+(wynik['down'] - wynik['up']) * wynik['forward']
+```
+
+
+## Part Two
+
+down X increases your aim by X units.
+up X decreases your aim by X units.
+forward X does two things:
+  It increases your horizontal position by X units.
+  It increases your depth by your aim multiplied by X.
+
+
+```{r}
+aim <- 0
+pos <- 0
+for (i in 1:nrow(dane)){
+  if (dane$polecenie[i] == "down"){
+    aim <<- aim + dane$wartosc[i]
+  } else if (dane$polecenie[i] == "up") {
+    aim <<- aim - dane$wartosc[i]
+  } else if (dane$polecenie[i] == "forward"){
+    pas <<- pos + dane$wartosc[i] 
+  }
+}
+  print(H*X)
+```
+
+```{r}
+with(dane, {
+    x <- (polecenie == 'forward') * wartosc
+    y <- ((polecenie == 'down') - (polecenie == 'up')) * wartosc
+    depth <- cumsum(y) * x
+    sum(x) * sum(depth)
+  })
+```
+

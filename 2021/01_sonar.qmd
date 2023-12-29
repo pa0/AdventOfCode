@@ -1,0 +1,47 @@
+---
+title: "Sonar"
+format: html
+---
+
+```{r}
+readLines("input_sona.txt") |> as.numeric() -> pomiary
+length(pomiary)
+```
+
+# Wzrost głębokości
+
+```{r}
+cbind(pomiary, pomiary[c(2:length(pomiary),NA)]) |> 
+  apply(MARGIN = 1, function(x) (x[1] - x[2]) |> sign() == -1) -> zmiana
+
+zmiana |> sum(na.rm=T)
+```
+# Wzrost głębokości, ale przy sumie 3 pomiarów
+
+```{r}
+# rozwiązanie literalnie jak w poleceniu
+wynik <- numeric()
+for(i in seq_along(pomiary)){
+  (pomiary[c(i, i+1, i+2)] |> sum() - pomiary[c(i+1, i+2, i+3)] |> sum()) |> sign() == -1 -> a
+  wynik[i] <- a
+}
+wynik |> sum(na.rm=T)
+```
+
+
+```{r}
+# Sprytniejsze rozwiązanie, bez dodawania wartości, które są w obydwu składnikach
+# porównuje pierwszy z czwartym
+cbind(pomiary, pomiary[c(4:length(pomiary),rep(NA,3))]) |> 
+  apply(MARGIN = 1, function(x) (x[1] - x[2]) |> sign() == -1) -> zmiana
+
+zmiana |> sum(na.rm=T)
+```
+
+
+
+```{r}
+# Rozwiązanie jednolinijkowe
+sapply(c(1, 3), \(krok) sum(diff(pomiary, krok) > 0))
+```
+

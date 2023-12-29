@@ -1,0 +1,122 @@
+---
+title: "Monkey bussiness"
+format: html
+---
+
+```{r}
+rm(list=ls())
+```
+
+```{r}
+data_input <- readLines("input_monkeys")
+```
+
+```{r}
+# Funkcja do przetwarzania danych wejściowych na listę
+process_data <- function(data_input) {
+  monkeys <- list()
+  for (line in data_input) {
+    if (grepl("Monkey \\d+:$", line)) {
+      # Nowa małpa
+      current_monkey <-
+        list(
+          name = as.numeric(gsub("Monkey ", "", gsub(":$", "", line))),
+          starting_items = numeric(),
+          operation = NULL,
+          test = NULL,
+          true_monkey = NULL,
+          false_monkey = NULL
+        )
+    } else if (grepl("Starting items:", line)) {
+      # Przetwarzanie początkowych przedmiotów
+      current_monkey$starting_items <- as.numeric(strsplit(gsub("Starting items: ", "", line), ", ")[[1]])
+    } else if (grepl("Operation:", line)) {
+      # Przetwarzanie operacji
+      current_monkey$operation <- gsub("Operation:", "", gsub(" ","", gsub("new = ", "", line)))
+    } else if (grepl("Test:", line)) {
+      # Przetwarzanie testu
+      current_monkey$test <- gsub("  Test: divisible by ", "", line) |> as.numeric()
+    } else if (grepl("If true:", line)) {
+      # Przetwarzanie instrukcji dla true
+      current_monkey$true_monkey <- as.numeric(gsub("If true: throw to monkey ", "", line))
+    } else if (grepl("If false:", line)) {
+      # Przetwarzanie instrukcji dla false
+      current_monkey$false_monkey <- as.numeric(gsub("If false: throw to monkey ", "", line))
+    } else if (line == "") {
+      # Koniec danych dla danej małpy
+      monkeys <- c(monkeys, list(current_monkey))
+      current_monkey <- NULL
+    }
+  }
+  return(monkeys)
+}
+
+# Wywołanie funkcji
+monkeys_list <- process_data(data_input)
+
+# Wyświetlenie uzyskanej listy
+print(monkeys_list[[1]])
+```
+
+```{r}
+# Funkcja "zabawa małp"
+monkey_play <- function(monkeys, monkey_number) {
+  if (monkey_number < 0 || monkey_number > length(monkeys)) {
+    stop("Invalid monkey number.")
+  }
+
+  current_monkey <- monkeys[[monkey_number]]
+
+  # Wywołaj efekt operacji
+  if (!is.null(current_monkey$operation)) {
+    operation <- current_monkey$operation
+    test_value <- current_monkey$test
+    
+    current_monkey$starting_items <-
+    sapply(current_monkey$starting_items, function(x) floor(x |> 
+             gsub(pattern = "old", replacement = _, operation) |> 
+             parse(text=_) |> 
+             eval()/3))
+  }
+
+  # Wybierz, do której małpy przekazać przedmioty
+  next_monkey_number <-
+    sapply(current_monkey$starting_items, function(x)
+      ifelse(
+        x %% test_value == 0,
+        current_monkey$true_monkey,
+        current_monkey$false_monkey
+      ))
+  
+  return(list(next_monkey_number = next_monkey_number))
+}
+```
+
+
+```{r}
+# Bawią się małpy 1 rundę
+sapply(1:length(monkeys_list), function(x) monkey_play(monkeys_list, x)) -> runda
+# Do porównania po rundzie
+monkeys_list_before_1 <- monkeys_list
+
+# backup: monkeys_list_before_1 -> monkeys_list
+# Funkcja do przekazywania przedmiotów między małpami
+for(monkey_from in 1:length(monkeys_list)) {
+  starting_items <- monkeys_list[[monkey_from]]$starting_items
+  for (przedmiot_nr in 1:length(starting_items)) {
+    przedmiot <- starting_items[przedmiot_nr]
+    monkey_to <- runda[[1]][1]-1
+    monkeys_list[[monkey_to]]$starting_items <-
+      c(monkeys_list[[monkey_to]]$starting_items, przedmiot)
+  }
+  monkeys_list[[monkey_from]]$starting_items <- numeric()
+}
+monkeys_list
+```
+
+```{r}
+monkeys_list |>  sapply(function(monkey) length(monkey$starting_items)) |> sum()
+monkeys_list_before_1 |>  sapply(function(monkey) length(monkey$starting_items)) |> sum()
+
+```
+

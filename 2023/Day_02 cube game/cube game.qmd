@@ -1,0 +1,88 @@
+---
+title: "Day 2 - Cube game"
+author: "PK"
+format: html
+---
+
+```{r}
+library(dplyr)
+library(stringr)
+library(purrr)
+readLines("input") -> games
+
+glimpse(games)
+```
+
+# Part One
+
+```{r}
+games |> sub(pattern = "Game [0-9]+: ", replacement = "") |> 
+  str_split(pattern = ";") |> 
+  lapply(function(x) str_split(pattern = ",", x)) -> lista
+
+## rozbijanie na elementy
+for(gra in seq_along(lista)) {
+  lista[[gra]] |> sapply(function(x) str_split(pattern = " ", x) |> unlist()) -> lista[[gra]]
+  lapply(c(1:length(lista[[gra]])), function(x) lista[[gra]][[x]][!(lista[[gra]][[x]] == "")]) -> lista[[gra]]
+}
+```
+
+
+```{r}
+zbior <- data.frame(matrix(rep(0, length(lista)* 5 * 5), ncol = 5))
+colnames(zbior) <- c("gra", "proby", "red", "green", "blue")
+
+indeks <- 1
+for(zestaw in seq_along(lista)) {
+  #zestaw <- 1:liczba zestwów
+  lista_zestaw <- lista[[zestaw]]
+  for (gra in seq_along(lista_zestaw)) {
+    #gra <- 1:liczba gier
+    lista_gra <- lista_zestaw[[gra]]
+    for (i in seq(2, length(lista_gra), 2)) {
+      #liczba kulek 1:3 => i <- 2 i <- 4 i <- 6
+      kolor <- lista_gra[i]
+      zbior[indeks, c("gra", "proby", kolor)] <-
+        c(zestaw, gra, lista_gra[i - 1] |> as.numeric())
+      # sprawdzenie jak wygląda iteracja
+      # print(paste("zestaw:",zestaw,"gra:",gra,"kulki:",i/2, "indeks:",indeks))
+    }
+    indeks <- indeks+1
+  }
+}
+zbior[zbior$gra!=0,] -> zbior
+```
+
+
+
+
+```{r}
+
+## porównanie do wzorca
+wzor <- cbind(red = 12, green = 13, blue = 14) |> data.frame()
+
+zbior$red_check <- zbior$red > wzor$red
+zbior$green_check <- zbior$green > wzor$green
+zbior$blue_check <- zbior$blue > wzor$blue
+
+zbior |> 
+  filter(red_check | green_check | blue_check) |>
+  select(gra) |> 
+  unique() -> impossible
+
+## Posiible
+sum(unique(zbior$gra)) - sum(impossible)
+```
+
+# Part Two
+
+```{r}
+zbior |> 
+  group_by(gra) |> 
+  summarise(r = max(red), g = max(green), b = max(blue)) |> 
+  mutate(power = r * g * b) |> 
+  summarise(sum(power))
+```
+
+
+

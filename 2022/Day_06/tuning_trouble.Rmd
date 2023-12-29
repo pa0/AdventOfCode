@@ -1,0 +1,41 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+rm(list=ls())
+library(stringi)
+```
+
+
+```{r}
+sygnal <- readLines("lista_slow")
+```
+
+```{r}
+dlugosc_unikalnego <- 14
+
+unikalny <- dlugosc_unikalnego-1   # długość unikalnego ciągu
+i <- 1
+szukam <- T
+
+while (szukam) {
+  ten <- substr(sygnal, i, i+unikalny)
+  if((stri_count_coll(ten, letters) |> max()) == 1) {
+    print(i+unikalny)
+    szukam <- F
+  }
+  if(i == nchar(sygnal)){
+    szukam <- F
+  }
+  i <- i+1
+}
+
+```
+
+```{r}
+substr(sygnal, 3976-13,3976)
+stri_count_coll(substr(sygnal, 3976-13,3976), pattern = letters)
+```
+
