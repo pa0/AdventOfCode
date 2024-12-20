@@ -1,0 +1,57 @@
+---
+title: "Day 1"
+format: html
+---
+
+```{r}
+library(tidyverse)
+library(conflicted)
+```
+
+```{r}
+#url <- "https://adventofcode.com/2024/day/1/input"
+clipr::read_clip() |> 
+  str_split(pattern = "   ", simplify = T) |> 
+  as_tibble() |> 
+  mutate_all(as.numeric) -> odleglosci
+```
+
+
+```{r}
+odleglosci |> 
+  transmute(a = sort(V1), b = sort(V2)) |> 
+  mutate(a_b = abs(a-b)) |> 
+  summarise(wynik = sum(a_b))
+```
+
+```{r}
+table(odleglosci$V2) -> mnozniki
+
+for(i in seq_along(mnozniki)){
+  ktore <- mnozniki |> names()
+  which(ktore == odleglosci$V1[i] |> as.character()) -> w
+  if(w != integer(0)){
+    print(list(c(w,ktore[i])))
+  }
+}
+
+odleglosci |> 
+  select(V1) |> 
+  group_by(V1) |> 
+  summarise(V1 * mnozniki[which(mnozniki == V1)])
+```
+
+```{r}
+# Częstości występowania
+czestosci <- table(odleglosci$V2)
+
+# Dopasowanie częstości do wektora do przemnożenia
+odleglosci$dopasowane_czestosci <- czestosci[as.character(odleglosci$V1)]
+
+# Mnożenie
+odleglosci |> 
+  dplyr::filter(!is.na(dopasowane_czestosci)) |> 
+  mutate(a_i = V1 * dopasowane_czestosci) |> 
+  summarise(sum(a_i))
+```
+
